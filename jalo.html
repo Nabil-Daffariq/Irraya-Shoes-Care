@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shoe Cleaning Service App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212; /* dark background */
+      color: #e0e0e0; /* light text */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .dark-yellow {
+      color: #d4af37;
+    }
+    .bg-dark-yellow {
+      background-color: #d4af37;
+    }
+    .bg-dark-yellow-hover:hover {
+      background-color: #b38b2f;
+    }
+    /* Scrollbar styling for better UX */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1f1f1f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #d4af37;
+      border-radius: 3px;
+    }
+
+    /* Smooth fade and slide transitions for content sections */
+    .content-section {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      will-change: opacity, transform;
+    }
+    .content-section:not(.hidden) {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Navbar button active indicator */
+    nav button.nav-btn {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    nav button.nav-btn.text-white::after,
+    nav button.nav-btn.dark-yellow::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      width: 50%;
+      height: 3px;
+      background-color: #d4af37;
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    nav button.nav-btn:not(.text-white):not(.dark-yellow)::after {
+      content: none;
+    }
+
+    /* Button hover and focus animations */
+    button,
+    input,
+    select {
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    button:hover:not(:disabled),
+    button:focus:not(:disabled) {
+      box-shadow: 0 0 8px #d4af37aa;
+      transform: translateY(-2px);
+    }
+    button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 0 4px #d4af37cc;
+    }
+    input:focus,
+    select:focus {
+      box-shadow: 0 0 8px #d4af37aa;
+      outline: none;
+    }
+
+    /* Card style for forms and content */
+    .card {
+      background-color: #1f1f1f;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      padding: 1.5rem;
+      transition: box-shadow 0.3s ease;
+    }
+    .card:hover {
+      box-shadow: 0 6px 18px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Modal backdrop */
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.75);
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* Modal content */
+    .modal-content {
+      background-color: #2a2a2a;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 90vw;
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.7);
+      text-align: center;
+      color: #e0e0e0;
+    }
+    .modal-content button {
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Login Screen -->
+  <section id="login-screen" class="flex flex-col justify-center items-center flex-grow px-6">
+    <div class="w-full max-w-sm card">
+      <h1 class="text-3xl font-semibold mb-6 text-center dark-yellow">Login</h1>
+      <form id="login-form" class="space-y-6" autocomplete="off" novalidate>
+        <div class="relative">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            class="peer w-full px-4 pt-6 pb-2 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dark-yellow"
+            placeholder=" "
+          />
+          <label
+            for="username"
+            class="absolute left-4 top-2 text-gray-400 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-2 peer-focus:text-sm peer-focus:text-dark-yellow cursor-text"
+            >Username</label
+          >
+        </div>
+        <div class="relative">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            class="peer w-full px-4 pt-6 pb-2 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-dark-yellow"
+            placeholder=" "
+          />
+          <label
+            for="password"
+            class="absolute left-4 top-2 text-gray-400 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-2 peer-focus:text-sm peer-focus:text-dark-yellow cursor-text"
+            >Password</label
+          >
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-dark-yellow hover:bg-dark-yellow-hover text-black font-semibold py-2 rounded-md transition-colors duration-300"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="hidden flex-col flex-grow">
+    <!-- Navbar -->
+    <nav class="bg-gray-900 shadow-md flex justify-around py-4 text-gray-300">
+      <button
+        class="nav-btn flex flex-col items-center space-y-1 focus:outline-none"
+        data-target="add-order"
+        aria-label="Tambah Pesanan"
+        type="button"
+      >
+        <i class="fas fa-plus-circle text-2xl dark-yellow"></i>
+        <span class="text-sm">Tambah Pesanan</span>
+      </button>
+      <button
+        class="nav-btn flex flex-col items-center space-y-1 focus:outline-none"
+        data-target="order-history"
+        aria-label="Riwayat Pesanan"
+        type="button"
+      >
+        <i class="fas fa-history text-2xl dark-yellow"></i>
+        <span class="text-sm">Riwayat Pesanan</span>
+      </button>
+      <button
+        class="nav-btn flex flex-col items-center space-y-1 focus:outline-none"
+        data-target="loyalty-program"
+        aria-label="Loyalty Program"
+        type="button"
+      >
+        <i class="fas fa-gift text-2xl dark-yellow"></i>
+        <span class="text-sm">Loyalty Program</span>
+      </button>
+      <button
+        class="nav-btn flex flex-col items-center space-y-1 focus:outline-none"
+        data-target="price-list"
+        aria-label="Pricelist"
+        type="button"
+      >
+        <i class="fas fa-list-ul text-2xl dark-yellow"></i>
+        <span class="text-sm">Pricelist</span>
+      </button>
+      <button
+        id="logout-btn"
+        class="flex flex-col items-center space-y-1 focus:outline-none"
+        aria-label="Logout"
+        type="button"
+      >
+        <i class="fas fa-sign-out-alt text-2xl text-red-600"></i>
+        <span class="text-sm text-red-600">Logout</span>
+      </button>
+    </nav>
+
+    <!-- Content -->
+    <main class="flex-grow overflow-auto p-6 bg-gray-800">
+      <!-- Add Order -->
+      <section id="add-order" class="content-section hidden max-w-md mx-auto space-y-6">
+        <h2 class="text-2xl font-semibold dark-yellow mb-4 text-center">Tambah Pesanan</h2>
+        <form id="order-form" class="space-y-4 card">
+          <div class="relative">
+            <input
+              type="text"
+              id="customer-name"
+              name="customerName"
+              required
+              class="peer w-full px-3 pt-5 pb-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-dark-yellow"
+              placeholder=" "
+            />
+            <label
+              for="customer-name"
+              class="absolute left-3 top-1 text-gray-400 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-1 peer-focus:text-sm peer-focus:text-dark-yellow cursor-text"
+              >Nama Pelanggan</label
+            >
+          </div>
+          <div class="relative">
+            <select
+              id="shoe-type"
+              name="shoeType"
+              required
+              class="peer w-full px-3 pt-5 pb-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-dark-yellow appearance-none"
+            >
+              <option value="" disabled selected></option>
+              <option value="sneakers">Sneakers</option>
+              <option value="formal">Formal</option>
+              <option value="boots">Boots</option>
+              <option value="sports">Sports</option>
+              <option value="others">Lainnya</option>
+            </select>
+            <label
+              for="shoe-type"
+              class="absolute left-3 top-1 text-gray-400 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-1 peer-focus:text-sm peer-focus:text-dark-yellow cursor-text"
+              >Jenis Sepatu</label
+            >
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="relative">
+            <select
+              id="service-type"
+              name="serviceType"
+              required
+              class="peer w-full px-3 pt-5 pb-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-dark-yellow appearance-none"
+            >
+              <option value="" disabled selected></option>
+              <option value="basic-cleaning">Basic Cleaning</option>
+              <option value="deep-cleaning">Deep Cleaning</option>
+              <option value="waterproofing">Waterproofing</option>
+              <option value="repair">Repair</option>
+            </select>
+            <label
+              for="service-type"
+              class="absolute left-3 top-1 text-gray-400 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-1 peer-focus:text-sm peer-focus:text-dark-yellow cursor-text"
+              >Jenis Layanan</label
+            >
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="relative">
+            <input
+              type="date"
+              id="pickup-date"
+              name="pickupDate"
+              required
+              class="peer w-full px-3 pt-5 pb-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-dark-yellow"
+              placeholder=" "
+            />
+            <label
+              for="pickup-date"
+              class="absolute left-3 top-1 text-gray-400 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-1 peer-focus:text-sm peer-focus:text-dark-yellow cursor-text"
+              >Tanggal Pengambilan</label
+            >
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-dark-yellow hover:bg-dark-yellow-hover text-black font-semibold py-2 rounded-md transition-colors duration-300"
+          >
+            Tambah Pesanan
+          </button>
+        </form>
+      </section>
+
+      <!-- Order History -->
+      <section id="order-history" class="content-section hidden max-w-md mx-auto">
+        <h2 class="text-2xl font-semibold dark-yellow mb-4 text-center">Riwayat Pesanan</h2>
+        <ul id="history-list" class="space-y-4">
+          <!-- Order history items will be appended here -->
+        </ul>
+      </section>
+
+      <!-- Loyalty Program -->
+      <section id="loyalty-program" class="content-section hidden max-w-md mx-auto">
+        <h2 class="text-2xl font-semibold dark-yellow mb-4 text-center">Loyalty Program</h2>
+        <p class="text-center mb-4">
+          Kumpulkan poin setiap kali Anda melakukan pesanan dan dapatkan diskon menarik!
+        </p>
+        <div class="card text-center">
+          <p class="text-lg font-semibold mb-2">Poin Anda:</p>
+          <p id="loyalty-points" class="text-4xl dark-yellow font-bold">0</p>
+          <button
+            id="redeem-btn"
+            class="mt-4 bg-dark-yellow hover:bg-dark-yellow-hover text-black font-semibold py-2 px-6 rounded-md transition-colors duration-300 disabled:opacity-50"
+            disabled
+          >
+            Tukar Poin
+          </button>
+        </div>
+      </section>
+
+      <!-- Price List -->
+      <section id="price-list" class="content-section hidden max-w-md mx-auto">
+        <h2 class="text-2xl font-semibold dark-yellow mb-4 text-center">Pricelist</h2>
+        <table class="w-full text-left border-collapse bg-gray-900 rounded-lg shadow-lg">
+          <thead>
+            <tr class="border-b border-gray-700">
+              <th class="py-3 px-4">Jenis Layanan</th>
+              <th class="py-3 px-4">Harga</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+              <td class="py-3 px-4">Basic Cleaning</td>
+              <td class="py-3 px-4">Rp 50.000</td>
+            </tr>
+            <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+              <td class="py-3 px-4">Deep Cleaning</td>
+              <td class="py-3 px-4">Rp 100.000</td>
+            </tr>
+            <tr class="border-b border-gray-700 hover:bg-gray-700 transition-colors">
+              <td class="py-3 px-4">Waterproofing</td>
+              <td class="py-3 px-4">Rp 75.000</td>
+            </tr>
+            <tr class="hover:bg-gray-700 transition-colors">
+              <td class="py-3 px-4">Repair</td>
+              <td class="py-3 px-4">Rp 120.000</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </section>
+
+  <script>
+    // Simple SPA navigation and state management
+    const loginScreen = document.getElementById('login-screen');
+    const dashboard = document.getElementById('dashboard');
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const contentSections = document.querySelectorAll('.content-section');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // State
+    let loyaltyPoints = 0;
+    let orderHistory = [];
+
+    // Show section by id with fade animation
+    function showSection(id) {
+      contentSections.forEach((section) => {
+        if (section.id === id) {
+          section.classList.remove('hidden');
+          // Trigger reflow for transition
+          void section.offsetWidth;
+          section.classList.add('active');
+        } else {
+          section.classList.remove('active');
+          setTimeout(() => {
+            section.classList.add('hidden');
+          }, 400);
+        }
+      });
+      // Highlight active nav button
+      navButtons.forEach((btn) => {
+        btn.classList.toggle('text-white', btn.dataset.target === id);
+        btn.classList.toggle('dark-yellow', btn.dataset.target === id);
+        btn.classList.toggle('text-gray-300', btn.dataset.target !== id);
+      });
+    }
+
+    // Login form submit
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Allow any input to login (no validation)
+      loginScreen.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      showSection('add-order');
+    });
+
+    // Navbar buttons click
+    navButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        showSection(btn.dataset.target);
+      });
+    });
+
+    // Logout button
+    logoutBtn.addEventListener('click', () => {
+      dashboard.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      document.getElementById('login-form').reset();
+    });
+
+    // Order form submit
+    document.getElementById('order-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const order = {
+        customerName: form.customerName.value.trim(),
+        shoeType: form.shoeType.value,
+        serviceType: form.serviceType.value,
+        pickupDate: form.pickupDate.value,
+        orderDate: new Date().toLocaleDateString(),
+      };
+      orderHistory.push(order);
+      loyaltyPoints += 10; // Add points per order
+      updateLoyaltyPoints();
+      addOrderToHistory(order);
+      form.reset();
+      showModal('Pesanan berhasil ditambahkan!');
+      showSection('order-history');
+    });
+
+    // Update loyalty points display and redeem button state
+    function updateLoyaltyPoints() {
+      const pointsEl = document.getElementById('loyalty-points');
+      const redeemBtn = document.getElementById('redeem-btn');
+      pointsEl.textContent = loyaltyPoints;
+      redeemBtn.disabled = loyaltyPoints < 50;
+    }
+
+    // Add order to history list
+    function addOrderToHistory(order) {
+      const historyList = document.getElementById('history-list');
+      const li = document.createElement('li');
+      li.className = 'bg-gray-900 p-4 rounded-lg shadow-md';
+      li.innerHTML = '<p><strong>Nama:</strong> ' + order.customerName + '</p>' +
+        '<p><strong>Jenis Sepatu:</strong> ' + order.shoeType + '</p>' +
+        '<p><strong>Jenis Layanan:</strong> ' + order.serviceType + '</p>' +
+        '<p><strong>Tanggal Pengambilan:</strong> ' + order.pickupDate + '</p>' +
+        '<p><strong>Tanggal Pesan:</strong> ' + order.orderDate + '</p>';
+      historyList.prepend(li);
+    }
+
+    // Redeem points button
+    document.getElementById('redeem-btn').addEventListener('click', () => {
+      if (loyaltyPoints >= 50) {
+        loyaltyPoints -= 50;
+        updateLoyaltyPoints();
+        showModal('Poin berhasil ditukar! Terima kasih telah menggunakan layanan kami.');
+      }
+    });
+
+    // Modal functionality
+    const modalBackdrop = document.createElement('div');
+    modalBackdrop.className = 'modal-backdrop';
+    modalBackdrop.innerHTML = '';
+      <div class="modal-content">
+        <p id="modal-message"></p>
+        <button id="modal-close" class="bg-dark-yellow hover:bg-dark-yellow-hover text-black font-semibold py-2 px-6 rounded-md transition-colors duration-300">Tutup</button>
+      </div>
+    document.body.appendChild(modalBackdrop);
+
+    const modalMessage = document.getElementById('modal-message');
+    const modalCloseBtn = document.getElementById('modal-close');
+
+    function showModal(message) {
+      modalMessage.textContent = message;
+      modalBackdrop.classList.add('active');
+    }
+    modalCloseBtn.addEventListener('click', () => {
+      modalBackdrop.classList.remove('active');
+    });
+
+    // Initialize loyalty points display
+    updateLoyaltyPoints();
+  </script>
+</body>
+</html>
